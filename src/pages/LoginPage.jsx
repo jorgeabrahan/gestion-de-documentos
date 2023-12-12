@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import {
   Input,
   PrimaryButton,
@@ -19,6 +20,7 @@ export const LoginPage = () => {
     email: '',
     password: ''
   })
+  useEffect(() => setError(null), [setError])
   const { login, logoutWithError, startChecking } = useAuth()
   const handleSubmit = (e) => {
     e.preventDefault()
