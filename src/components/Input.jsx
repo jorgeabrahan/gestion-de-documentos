@@ -6,7 +6,9 @@ export const Input = ({
   id = '',
   type = 'text',
   isRequired = true,
-  className = ''
+  className = '',
+  value = '',
+  handleChange = () => {}
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   return (
@@ -33,6 +35,8 @@ export const Input = ({
         required={isRequired}
         spellCheck="off"
         autoComplete="off"
+        value={value}
+        onChange={handleChange}
       />
     </div>
   )
@@ -43,5 +47,7 @@ Input.propTypes = {
   id: PropTypes.string,
   type: PropTypes.string,
   isRequired: PropTypes.bool,
-  className: PropTypes.string
+  className: PropTypes.string,
+  value: PropTypes.string,
+  handleChange: PropTypes.func
 }
