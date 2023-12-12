@@ -3,20 +3,37 @@ import {
   PrimaryButton,
   GoogleSignInButton,
   SectionTitle,
-  SectionSubtitle
+  SectionSubtitle,
+  SecondaryDescription
 } from '../components'
 import { PrimaryLink } from '../components/PrimaryLink'
+import { loginWithEmailAndPassword } from '../firebase/auth'
 import { useForm } from '../hooks'
+import { useAuth } from '../hooks/auth/useAuth'
 import { CenteredBoxLayout } from '../layouts'
+import { AUTH_STATUS, authStore } from '../stores'
 
 export const LoginPage = () => {
+  const { status, error, setError } = authStore(store => store)
   const { email, password, onInputChange } = useForm({
     email: '',
     password: ''
   })
+  const { login, logoutWithError, startChecking } = useAuth()
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(email, password)
+    if (email.trim().length === 0 || password.trim().length === 0) {
+      setError('Porfavor llena todos los campos')
+      return
+    }
+    startChecking()
+    loginWithEmailAndPassword({ email, password }).then((res) => {
+      if (res?.ok) {
+        login({ uid: res?.uid, displayName: res?.displayName, email })
+        return
+      }
+      logoutWithError(res?.errorMessage)
+    })
   }
   return (
     <main className="delimiter grid place-items-center h-[100vh]">
@@ -31,13 +48,12 @@ export const LoginPage = () => {
           <Input
             label="Correo electronico"
             id="email"
-            type='email'
+            type="email"
             value={email}
             handleChange={onInputChange}
             isRequired={true}
           />
           <Input
-            className="mb-8"
             label="Contraseña"
             id="password"
             type="password"
@@ -45,14 +61,17 @@ export const LoginPage = () => {
             handleChange={onInputChange}
             isRequired={true}
           />
-          <PrimaryButton text="Iniciar sesión" className="w-full" />
-          <GoogleSignInButton />
+          {(error !== null && error !== '') && <SecondaryDescription text={error} />}
+          <PrimaryButton text="Iniciar sesión" className="w-full" isDisabled={status === AUTH_STATUS.checking} />
+          <GoogleSignInButton isDisabled={status === AUTH_STATUS.checking} />
         </form>
-        <PrimaryLink
-          className="block mx-auto mt-4"
-          text="¿No tienes una cuenta?"
-          to="/crear-cuenta"
-        />
+        {status !== AUTH_STATUS.checking && (
+          <PrimaryLink
+            className="block mx-auto mt-4"
+            text="¿No tienes una cuenta?"
+            to="/crear-cuenta"
+          />
+        )}
       </CenteredBoxLayout>
     </main>
   )
