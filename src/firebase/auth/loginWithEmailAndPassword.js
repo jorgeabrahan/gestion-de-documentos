@@ -14,6 +14,9 @@ export const loginWithEmailAndPassword = async ({ email, password }) => {
   } catch (err) {
     let errorMessage = ''
     switch (err.code) {
+      case 'auth/invalid-credential':
+        errorMessage = 'No se encontro un usuario con estas credenciales'
+        break
       case 'auth/invalid-email':
         errorMessage = 'El formato del correo electrónico no es correcto'
         break
