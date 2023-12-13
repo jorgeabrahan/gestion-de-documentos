@@ -10,7 +10,7 @@ export const useAuth = () => {
   const login = (user) => {
     setUser({ displayName: user.displayName, email: user.email, uid: user.uid, role: user.role })
     setError(null)
-    if (user.role === USER_ROLES.pending) {
+    if (user.role === USER_ROLES.disabled) {
       setStatus(AUTH_STATUS.unauthorized)
       logoutFirebase()
       return

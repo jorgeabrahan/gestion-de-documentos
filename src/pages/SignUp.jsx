@@ -113,7 +113,7 @@ export const SignUp = () => {
           )}
           {/* mensaje para mostrar una vez se cree la cuenta */}
           {(user?.uid !== null || user?.uid !== '') &&
-            user?.role === USER_ROLES.pending && (
+            user?.role === USER_ROLES.disabled && (
               <SecondaryDescription text="El administrador de tu organización fue notificado de la creación de tu cuenta, espera a que el te permita el acceso, una vez lo haga podras iniciar sesión con tus credenciales" />
             )}
           <PrimaryButton

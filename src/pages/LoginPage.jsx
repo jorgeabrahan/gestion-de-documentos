@@ -72,8 +72,8 @@ export const LoginPage = () => {
           )}
           {/* mensaje para mostrar si su cuenta aun no ha sido aprobada */}
           {(user?.uid !== null || user?.uid !== '') &&
-            user?.role === USER_ROLES.pending && (
-              <SecondaryDescription text="El administrador de tu organización aun no ha permitido tu acceso por lo que no puedes ingresar" />
+            user?.role === USER_ROLES.disabled && (
+              <SecondaryDescription text="El administrador de tu organización no ha permitido tu acceso por lo que no puedes ingresar" />
             )}
           <PrimaryButton
             text="Iniciar sesión"
