@@ -7,7 +7,7 @@ import {
   SectionTitle
 } from '../components'
 import { PrimaryLink } from '../components/PrimaryLink'
-import { logoutFirebase, registerWithEmailAndPassword } from '../firebase/auth'
+import { registerWithEmailAndPassword } from '../firebase/auth'
 import { checkName, checkPassword } from '../helpers/auth'
 import { useForm } from '../hooks'
 import { useAuth } from '../hooks/auth/useAuth'
@@ -16,7 +16,7 @@ import { AUTH_STATUS, USER_ROLES, authStore } from '../stores'
 import { createUserColection } from '../firebase/database'
 
 export const SignUp = () => {
-  const { user, status, error, setError, setUserRole } = authStore(
+  const { user, status, error, setError } = authStore(
     (store) => store
   )
   const { displayName, email, password, confirmPassword, onInputChange } =
@@ -58,11 +58,9 @@ export const SignUp = () => {
     registerWithEmailAndPassword({ email, password, displayName }).then(
       (res) => {
         if (res?.ok) {
-          login({ uid: res?.uid, displayName: res?.displayName, email })
           // cuando una cuenta esta recien creada debe ser aprobada por el administrador de la organización
           createUserColection(res?.uid, USER_ROLES.pending)
-          setUserRole(USER_ROLES.pending)
-          logoutFirebase() // cerrar la sesion del usuario ya que su cuenta debe ser aprobada primero
+          login({ uid: res?.uid, displayName: res?.displayName, email, role: USER_ROLES.pending })
           return
         }
         logoutWithError(res?.errorMessage)
