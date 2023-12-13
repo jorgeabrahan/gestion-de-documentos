@@ -7,15 +7,18 @@ import {
   SectionTitle
 } from '../components'
 import { PrimaryLink } from '../components/PrimaryLink'
-import { registerWithEmailAndPassword } from '../firebase/auth'
+import { logoutFirebase, registerWithEmailAndPassword } from '../firebase/auth'
 import { checkName, checkPassword } from '../helpers/auth'
 import { useForm } from '../hooks'
 import { useAuth } from '../hooks/auth/useAuth'
 import { CenteredBoxLayout } from '../layouts'
-import { AUTH_STATUS, authStore } from '../stores'
+import { AUTH_STATUS, USER_ROLES, authStore } from '../stores'
+import { createUserColection } from '../firebase/database'
 
 export const SignUp = () => {
-  const { status, error, setError } = authStore((store) => store)
+  const { user, status, error, setError, setUserRole } = authStore(
+    (store) => store
+  )
   const { displayName, email, password, confirmPassword, onInputChange } =
     useForm({
       displayName: '',
@@ -56,9 +59,10 @@ export const SignUp = () => {
       (res) => {
         if (res?.ok) {
           login({ uid: res?.uid, displayName: res?.displayName, email })
-          // TODO: crear un espacio en firestore para guardar datos adicionales del usuario en cuestion
-          // el primer dato adicional necesario es el role que por defecto sera 'pending'
-          // los valores posibles para role seran 'pending' | 'user' | 'admin'
+          // cuando una cuenta esta recien creada debe ser aprobada por el administrador de la organización
+          createUserColection(res?.uid, USER_ROLES.pending)
+          setUserRole(USER_ROLES.pending)
+          logoutFirebase() // cerrar la sesion del usuario ya que su cuenta debe ser aprobada primero
           return
         }
         logoutWithError(res?.errorMessage)
@@ -109,6 +113,11 @@ export const SignUp = () => {
           {error !== null && error !== '' && (
             <SecondaryDescription text={error} />
           )}
+          {/* mensaje para mostrar una vez se cree la cuenta */}
+          {(user?.uid !== null || user?.uid !== '') &&
+            user?.role === USER_ROLES.pending && (
+              <SecondaryDescription text="El administrador de tu organización fue notificado de la creación de tu cuenta, espera a que el te permita el acceso, una vez lo haga podras iniciar sesión con tus credenciales" />
+            )}
           <PrimaryButton
             text="Crear cuenta"
             className="w-full"
