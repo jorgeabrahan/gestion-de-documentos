@@ -7,7 +7,7 @@ import {
   SecondaryDescription
 } from '../components'
 import { PrimaryLink } from '../components/PrimaryLink'
-import { loginWithEmailAndPassword, logoutFirebase } from '../firebase/auth'
+import { loginWithEmailAndPassword } from '../firebase/auth'
 import { useForm } from '../hooks'
 import { useAuth } from '../hooks/auth/useAuth'
 import { CenteredBoxLayout } from '../layouts'
@@ -15,7 +15,7 @@ import { AUTH_STATUS, USER_ROLES, authStore } from '../stores'
 import { createUserColection } from '../firebase/database'
 
 export const LoginPage = () => {
-  const { user, setUserRole, status, setStatus, error, setError } = authStore(
+  const { user, status, error, setError } = authStore(
     (store) => store
   )
   const { email, password, onInputChange } = useForm({
@@ -33,18 +33,8 @@ export const LoginPage = () => {
     startChecking()
     loginWithEmailAndPassword({ email, password }).then((res) => {
       if (res?.ok) {
-        login({ uid: res?.uid, displayName: res?.displayName, email })
-        startChecking()
         createUserColection(res?.uid).then((data) => {
-          setUserRole(data?.role)
-          setStatus(
-            data?.role === USER_ROLES.pending
-              ? AUTH_STATUS.unauthorized
-              : AUTH_STATUS.authorized
-          )
-          if (data?.role === USER_ROLES.pending) {
-            logoutFirebase() // cerrar la sesion del usuario si su cuenta aun no ha sido aprobada
-          }
+          login({ uid: res?.uid, displayName: res?.displayName, email, role: data?.role })
         })
         return
       }
