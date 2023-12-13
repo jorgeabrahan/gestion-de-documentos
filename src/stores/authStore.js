@@ -7,7 +7,7 @@ export const AUTH_STATUS = {
 }
 
 export const USER_ROLES = {
-  pending: 'pending',
+  disabled: 'disabled',
   user: 'user',
   admin: 'admin'
 }
