@@ -13,7 +13,7 @@ import { useForm } from '../hooks'
 import { useAuth } from '../hooks/auth/useAuth'
 import { CenteredBoxLayout } from '../layouts'
 import { AUTH_STATUS, USER_ROLES, authStore } from '../stores'
-import { createUserColection } from '../firebase/database'
+import { createUserColection, createUserInFirestore } from '../firebase/database'
 
 export const SignUp = () => {
   const { user, status, error, setError } = authStore(
@@ -59,8 +59,11 @@ export const SignUp = () => {
       (res) => {
         if (res?.ok) {
           // cuando una cuenta esta recien creada debe ser aprobada por el administrador de la organización
-          createUserColection(res?.uid, USER_ROLES.pending)
-          login({ uid: res?.uid, displayName: res?.displayName, email, role: USER_ROLES.pending })
+          createUserColection(res?.uid, USER_ROLES.disabled)
+          const user = { uid: res?.uid, displayName: res?.displayName, email, role: USER_ROLES.disabled }
+          createUserInFirestore(user).then(() => {
+            login(user)
+          })
           return
         }
         logoutWithError(res?.errorMessage)
