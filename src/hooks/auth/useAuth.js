@@ -1,4 +1,5 @@
-import { AUTH_STATUS, authStore, initialUser } from '../../stores'
+import { logoutFirebase } from '../../firebase/auth'
+import { AUTH_STATUS, USER_ROLES, authStore, initialUser } from '../../stores'
 
 export const useAuth = () => {
   const { setUser, setStatus, setError } = authStore((store) => store)
@@ -7,13 +8,19 @@ export const useAuth = () => {
     setStatus(AUTH_STATUS.checking)
   }
   const login = (user) => {
-    setUser({ displayName: user.displayName, email: user.email, uid: user.uid })
+    setUser({ displayName: user.displayName, email: user.email, uid: user.uid, role: user.role })
     setError(null)
+    if (user.role === USER_ROLES.pending) {
+      setStatus(AUTH_STATUS.unauthorized)
+      logoutFirebase()
+      return
+    }
     setStatus(AUTH_STATUS.authorized)
   }
   const logout = () => {
     setUser(initialUser)
     setStatus(AUTH_STATUS.unauthorized)
+    logoutFirebase()
   }
   const logoutWithError = (error = null) => {
     logout()
