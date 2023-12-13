@@ -27,6 +27,9 @@ export default {
         },
         'true-blue': {
           DEFAULT: '#0066CC'
+        },
+        'celtic-blue': {
+          DEFAULT: '#0071E3'
         }
       }
     },
