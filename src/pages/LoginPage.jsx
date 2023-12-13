@@ -2,20 +2,22 @@ import { useEffect } from 'react'
 import {
   Input,
   PrimaryButton,
-  GoogleSignInButton,
   SectionTitle,
   SectionSubtitle,
   SecondaryDescription
 } from '../components'
 import { PrimaryLink } from '../components/PrimaryLink'
-import { loginWithEmailAndPassword } from '../firebase/auth'
+import { loginWithEmailAndPassword, logoutFirebase } from '../firebase/auth'
 import { useForm } from '../hooks'
 import { useAuth } from '../hooks/auth/useAuth'
 import { CenteredBoxLayout } from '../layouts'
-import { AUTH_STATUS, authStore } from '../stores'
+import { AUTH_STATUS, USER_ROLES, authStore } from '../stores'
+import { createUserColection } from '../firebase/database'
 
 export const LoginPage = () => {
-  const { status, error, setError } = authStore(store => store)
+  const { user, setUserRole, status, setStatus, error, setError } = authStore(
+    (store) => store
+  )
   const { email, password, onInputChange } = useForm({
     email: '',
     password: ''
@@ -32,6 +34,18 @@ export const LoginPage = () => {
     loginWithEmailAndPassword({ email, password }).then((res) => {
       if (res?.ok) {
         login({ uid: res?.uid, displayName: res?.displayName, email })
+        startChecking()
+        createUserColection(res?.uid).then((data) => {
+          setUserRole(data?.role)
+          setStatus(
+            data?.role === USER_ROLES.pending
+              ? AUTH_STATUS.unauthorized
+              : AUTH_STATUS.authorized
+          )
+          if (data?.role === USER_ROLES.pending) {
+            logoutFirebase() // cerrar la sesion del usuario si su cuenta aun no ha sido aprobada
+          }
+        })
         return
       }
       logoutWithError(res?.errorMessage)
@@ -63,9 +77,19 @@ export const LoginPage = () => {
             handleChange={onInputChange}
             isRequired={true}
           />
-          {(error !== null && error !== '') && <SecondaryDescription text={error} />}
-          <PrimaryButton text="Iniciar sesión" className="w-full" isDisabled={status === AUTH_STATUS.checking} />
-          <GoogleSignInButton isDisabled={status === AUTH_STATUS.checking} />
+          {error !== null && error !== '' && (
+            <SecondaryDescription text={error} />
+          )}
+          {/* mensaje para mostrar si su cuenta aun no ha sido aprobada */}
+          {(user?.uid !== null || user?.uid !== '') &&
+            user?.role === USER_ROLES.pending && (
+              <SecondaryDescription text="El administrador de tu organización aun no ha permitido tu acceso por lo que no puedes ingresar" />
+            )}
+          <PrimaryButton
+            text="Iniciar sesión"
+            className="w-full"
+            isDisabled={status === AUTH_STATUS.checking}
+          />
         </form>
         {status !== AUTH_STATUS.checking && (
           <PrimaryLink
