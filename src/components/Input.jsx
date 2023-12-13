@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
+import { EyeClosed, EyeOpen } from '../assets/icons'
 
 export const Input = ({
   label = '',
@@ -10,6 +11,7 @@ export const Input = ({
   value = '',
   handleChange = () => {}
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   return (
     <div className={`relative w-full ${className}`}>
@@ -29,7 +31,7 @@ export const Input = ({
         onBlur={(e) => {
           if (e.target.value?.trim() === '') setIsFocused(false)
         }}
-        type={type}
+        type={type === 'password' ? (isPasswordVisible ? 'text' : type) : type}
         id={id}
         name={id}
         required={isRequired}
@@ -38,6 +40,11 @@ export const Input = ({
         value={value}
         onChange={handleChange}
       />
+      {type === 'password' && (
+        <button onClick={() => setIsPasswordVisible(prev => !prev)} className='absolute right-4 top-[50%] -translate-y-[50%]' type='button'>
+          {isPasswordVisible ? <EyeClosed color='#6E6E73' /> : <EyeOpen color='#6E6E73' />}
+        </button>
+      )}
     </div>
   )
 }
