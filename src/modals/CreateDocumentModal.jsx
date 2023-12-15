@@ -28,7 +28,7 @@ const createUsersOptions = (users, currentUser) => {
 
 export const CreateDocumentModal = () => {
   const { user } = authStore((store) => store)
-  const { users, documentTypes } = dataStore((store) => store)
+  const { users, documentTypes, addDocument: addDocumentToStore } = dataStore((store) => store)
   const [dateTime, setDateTime] = useState('')
   const [isPerformingAsync, setIsPerformingAsync] = useState(false)
   const [files, setFiles] = useState([])
@@ -127,6 +127,7 @@ export const CreateDocumentModal = () => {
       setSelectedOptions([])
       // limpiar todos los archivos
       setFiles([])
+      addDocumentToStore(document)
       toast.success('Documento creado con exito')
     } catch (error) {
       toast.error('Ocurrió un error al agregar el documento')
