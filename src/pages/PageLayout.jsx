@@ -5,12 +5,12 @@ import { useEffect } from 'react'
 import { MODAL_IDS, authStore, dataStore } from '../stores'
 import { useNavigate } from 'react-router-dom'
 import { ChangePasswordModal, CreateDocumentModal } from '../modals'
-import { getAllUsers, getDocumentTypes } from '../firebase/database'
+import { getAllUsers, getDocumentTypes, getDocuments } from '../firebase/database'
 import { ManageDocumentTypesModal } from '../modals/ManageDocumentTypesModal'
 
 export const PageLayout = ({ children, needsToBeAdmin = false }) => {
   const { user } = authStore((store) => store)
-  const { modalToShow, setUsers, setDocumentTypes } = dataStore(store => store)
+  const { modalToShow, setUsers, setDocumentTypes, setDocuments } = dataStore(store => store)
   const navigate = useNavigate()
   useEffect(() => {
     if (needsToBeAdmin && user.role !== 'admin') {
@@ -19,7 +19,13 @@ export const PageLayout = ({ children, needsToBeAdmin = false }) => {
   }, [navigate, needsToBeAdmin, user.role])
   // cargar todos los usuarios una vez el sitio cargue
   useEffect(() => {
-    getAllUsers().then((users) => setUsers(users))
+    getAllUsers().then((res) => {
+      if (res?.error !== null) {
+        toast.error('No se pudieron cargar los usuarios')
+        return
+      }
+      setUsers(res?.users)
+    })
     getDocumentTypes().then(res => {
       if (res.error !== null) {
         toast.error('No se pudieron cargar los tipos de documentos')
@@ -27,7 +33,14 @@ export const PageLayout = ({ children, needsToBeAdmin = false }) => {
       }
       setDocumentTypes(res?.documentTypes)
     })
-  }, [setUsers, setDocumentTypes])
+    getDocuments().then(res => {
+      if (res.error !== null) {
+        toast.error('No se pudieron cargar los documentos')
+        return
+      }
+      setDocuments(res?.documents)
+    })
+  }, [setUsers, setDocumentTypes, setDocuments])
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
