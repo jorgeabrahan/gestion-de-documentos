@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { authStore, dataStore } from '../stores'
 import { PageLayout } from './PageLayout'
-import { getAllUsers } from '../firebase/database'
 import { ColTitle, SearchInput, UserRow } from './users-page-c'
 import { RowTitleLayout } from './users-page-c/RowTitleLayout'
 import { useForm } from '../hooks'
@@ -9,7 +8,7 @@ import toast from 'react-hot-toast'
 
 export const Users = () => {
   const { user: currentUser } = authStore((store) => store)
-  const { users, setUsers } = dataStore((store) => store)
+  const { users } = dataStore((store) => store)
   const [filteredUsers, setFilteredUsers] = useState([])
   const { filterBy, query, onInputChange } = useForm({
     filterBy: 'name',
@@ -17,15 +16,8 @@ export const Users = () => {
   })
   const [isChangingUserRole, setIsChangingUserRole] = useState(false)
   useEffect(() => {
-    if (users.length !== 0) {
-      setFilteredUsers(users)
-      return
-    }
-    getAllUsers().then((users) => {
-      setUsers(users)
-      setFilteredUsers(users)
-    })
-  }, [setUsers])
+    if (users.length !== 0) setFilteredUsers(users)
+  }, [users])
   const handleSubmit = (e) => {
     e.preventDefault()
     const filtered = users.filter(fUser => {
