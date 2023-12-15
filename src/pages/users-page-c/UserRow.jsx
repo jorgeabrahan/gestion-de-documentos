@@ -72,7 +72,7 @@ export const UserRow = ({
           isDisabled={currentUser.uid === user.uid || isChangingUserRole}
           handleClick={handleSave}
         >
-          <Save />
+          <Save dimensions='15px' />
         </ActionButton>
         {/* <ActionButton text="Eliminar" isDisabled={currentUser.uid === user.uid}>
           <Delete />
