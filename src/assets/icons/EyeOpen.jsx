@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 
-export const EyeOpen = ({ color = '#000' }) => {
+export const EyeOpen = ({ color = '#000', dimensions = '24px' }) => {
   return (
     <svg
-      width="24px"
-      height="24px"
+      width={dimensions}
+      height={dimensions}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       fill="none"
@@ -29,5 +29,6 @@ export const EyeOpen = ({ color = '#000' }) => {
 }
 
 EyeOpen.propTypes = {
-    color: PropTypes.string
+    color: PropTypes.string,
+    dimensions: PropTypes.string
 }

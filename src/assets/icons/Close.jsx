@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 
-export const Close = ({ color = '#fff' }) => {
+export const Close = ({ color = '#fff', dimensions = "24px" }) => {
   return (
     <svg
-      width="24px"
-      height="24px"
+      width={dimensions}
+      height={dimensions}
       strokeWidth="1.5"
       viewBox="0 0 24 24"
       fill="none"
@@ -23,5 +23,6 @@ export const Close = ({ color = '#fff' }) => {
 }
 
 Close.propTypes = {
-    color: PropTypes.string
+    color: PropTypes.string,
+    dimensions: PropTypes.string
 }
