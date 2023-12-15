@@ -15,6 +15,7 @@ export const DOCUMENT_STATES = {
 export const dataStore = create((set) => ({
   users: [],
   documentTypes: [],
+  documents: [],
   modalToShow: null,
   setUsers: (users) => set((state) => ({ ...state, users })),
   setModalToShow: (modalToShow) => set((state) => ({ ...state, modalToShow })),
@@ -25,5 +26,7 @@ export const dataStore = create((set) => ({
       ...state,
       documentTypes: [...state.documentTypes, documentType]
     })),
-  removeDocumentType: (documentId) => set(state => ({ ...state, documentTypes: state?.documentTypes?.filter(dt => dt.id !== documentId) }))
+  removeDocumentType: (documentId) => set(state => ({ ...state, documentTypes: state?.documentTypes?.filter(dt => dt.id !== documentId) })),
+  setDocuments: (documents) => set(state => ({ ...state, documents })),
+  addDocument: (document) => set(state => ({ ...state, documents: [ ...state.documents, document ] }))
 }))
