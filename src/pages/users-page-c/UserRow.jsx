@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 import { Save } from '../../assets/icons'
 import { USER_ROLES } from '../../stores'
-import { ActionButton } from './ActionButton'
 import { RowContentLayout } from './RowContentLayout'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { updateUserRole } from '../../firebase/database'
+import { ActionButton } from '../../components'
 
 export const UserRow = ({
   user = { uid: '', displayName: '', email: '', role: '' },
@@ -20,23 +20,23 @@ export const UserRow = ({
       return
     }
     setIsChangingUserRole(true)
-    const updateUserPromise = updateUserRole(user.uid, userRole);
+    const updateUserPromise = updateUserRole(user.uid, userRole)
 
-  toast.promise(updateUserPromise, {
-    loading: 'Actualizando...',
-    success: (
-      <span>
-        <strong>{user.displayName}</strong> ahora es {userRole}
-      </span>
-    ),
-    error: (
-      <span>
-        <strong>{user.displayName}</strong> no se pudo actualizar
-      </span>
-    )
-  });
+    toast.promise(updateUserPromise, {
+      loading: 'Actualizando...',
+      success: (
+        <span>
+          <strong>{user.displayName}</strong> ahora es {userRole}
+        </span>
+      ),
+      error: (
+        <span>
+          <strong>{user.displayName}</strong> no se pudo actualizar
+        </span>
+      )
+    })
 
-  updateUserPromise.finally(() => setIsChangingUserRole(false));
+    updateUserPromise.finally(() => setIsChangingUserRole(false))
   }
   return (
     <RowContentLayout key={user.uid}>
