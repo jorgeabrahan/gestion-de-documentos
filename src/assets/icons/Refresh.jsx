@@ -1,37 +1,37 @@
 import PropTypes from 'prop-types'
 
-export const AddDocument = ({ color = '#fff', dimensions = '24px' }) => {
+export const Refresh = ({ color = '#fff', dimensions = '24px' }) => {
   return (
     <svg
       width={dimensions}
       height={dimensions}
-      viewBox="0 0 24 24"
       strokeWidth="1.5"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       color={color}
       stroke={color}
     >
       <path
-        d="M1.99219 19H4.99219M7.99219 19H4.99219M4.99219 19V16M4.99219 19V22"
+        d="M21.1679 8C19.6247 4.46819 16.1006 2 11.9999 2C6.81459 2 2.55104 5.94668 2.04932 11"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       ></path>
       <path
-        d="M7 2L16.5 2L21 6.5V19"
+        d="M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       ></path>
       <path
-        d="M11 22H16.5C17.3284 22 18 21.3284 18 20.5V8.74853C18 8.5894 17.9368 8.43679 17.8243 8.32426L14.6757 5.17574C14.5632 5.06321 14.4106 5 14.2515 5H4.5C3.67157 5 3 5.67157 3 6.5V13"
+        d="M2.88146 16C4.42458 19.5318 7.94874 22 12.0494 22C17.2347 22 21.4983 18.0533 22 13"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       ></path>
       <path
-        d="M14 5V8.4C14 8.73137 14.2686 9 14.6 9H18"
+        d="M7.04932 16H2.64932C2.31795 16 2.04932 16.2686 2.04932 16.6V21"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -40,7 +40,7 @@ export const AddDocument = ({ color = '#fff', dimensions = '24px' }) => {
   )
 }
 
-AddDocument.propTypes = {
+Refresh.propTypes = {
   color: PropTypes.string,
   dimensions: PropTypes.string
 }
