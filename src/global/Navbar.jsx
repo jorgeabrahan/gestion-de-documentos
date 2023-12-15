@@ -1,4 +1,4 @@
-import { Home, Logout, Users } from '../assets/icons'
+import { Documents, Home, Logout, Users } from '../assets/icons'
 import { useAuth } from '../hooks/auth/useAuth'
 import { Account, PageButton, PageLink } from './navbar-c'
 
@@ -14,6 +14,9 @@ export const Navbar = () => {
           </PageLink>
           <PageLink to="/usuarios" tooltip="Usuarios" needsToBeAdmin={true}>
             <Users />
+          </PageLink>
+          <PageLink to="/documentos" tooltip="Documentos">
+            <Documents />
           </PageLink>
         </div>
         <PageButton
