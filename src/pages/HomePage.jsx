@@ -18,6 +18,7 @@ export const HomePage = () => {
   const [filteredDocuments, setFilteredDocuments] = useState([])
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [documentState, setDocumentState] = useState('todos')
+  const [sortItems, setSortItems] = useState('recientesPrimero')
   useEffect(() => {
     const result = documents?.filter(
       (doc) =>
@@ -27,7 +28,7 @@ export const HomePage = () => {
     if (result !== null && result?.length > 0) setDocumentsSentToYou(result)
   }, [documents, user?.uid])
   useEffect(() => {
-    const results = documentsSentToYou?.filter(doc => {
+    const results = documentsSentToYou?.filter((doc) => {
       if (documentState === 'todos') return true
       return doc?.state === documentState
     })
@@ -35,10 +36,19 @@ export const HomePage = () => {
   }, [documentState, documentsSentToYou])
   return (
     <>
-      <form
-        className="flex items-center justify-end mb-3 gap-3"
-      >
-        <p className='text-dim-gray text-sm'>Filtrar por estado</p>
+      <form className="flex items-center justify-end mb-3 gap-3">
+        <p className="text-dim-gray text-sm">Ordenar por fecha</p>
+        <select
+          className="bg-[#ffffff0a] border border-solid border-onyx px-3 py-2 rounded-full text-sm w-max focus:outline-none"
+          id="sortItems"
+          name="sortItems"
+          value={sortItems}
+          onChange={(e) => setSortItems(e.target?.value)}
+        >
+          <option value="recientesPrimero">de recientes a antiguos</option>
+          <option value="antiguosPrimero">de antiguos a recientes</option>
+        </select>
+        <p className="text-dim-gray text-sm">Filtrar por estado</p>
         <select
           className="bg-[#ffffff0a] border border-solid border-onyx px-3 py-2 rounded-full text-sm w-max focus:outline-none"
           id="documentState"
@@ -88,18 +98,27 @@ export const HomePage = () => {
             className="text-center py-40"
             text="Espera a recibir documentos para verlos aqui"
           />
+        ) : filteredDocuments?.length < 1 ? (
+          <SecondaryDescription
+            className="text-center py-20"
+            text={`No se encontraron documentos con el estado ${documentState}`}
+          />
         ) : (
-          (filteredDocuments?.length < 1) ? (
-            <SecondaryDescription className='text-center py-20' text={`No se encontraron documentos con el estado ${documentState}`} />
-          ) : (
-            <DocumentsTable
-              documents={filteredDocuments.sort(
-                (a, b) =>
-                  new Date(b.creationTimeAndDate) -
-                  new Date(a.creationTimeAndDate)
-              )}
-            />
-          )
+          <DocumentsTable
+            documents={
+              sortItems === 'recientesPrimero'
+                ? filteredDocuments.sort(
+                    (a, b) =>
+                      new Date(b.creationTimeAndDate) -
+                      new Date(a.creationTimeAndDate)
+                  )
+                : filteredDocuments.sort(
+                    (a, b) =>
+                      new Date(a.creationTimeAndDate) -
+                      new Date(b.creationTimeAndDate)
+                  )
+            }
+          />
         )}
       </section>
     </>

@@ -27,6 +27,7 @@ export const DocumentsPage = () => {
   const [isRefreshing, setIsRefreshing] = useState((store) => store)
   const [documentsSentByYou, setDocumentsSentByYou] = useState([])
   const [filteredDocuments, setFilteredDocuments] = useState([])
+  const [sortItems, setSortItems] = useState('recientesPrimero')
   useEffect(() => {
     const result = documents?.filter((doc) => doc?.sender?.uid === user?.uid)
     setDocumentsSentByYou(result)
@@ -41,6 +42,17 @@ export const DocumentsPage = () => {
   return (
     <>
       <form className="flex items-center justify-end mb-3 gap-3">
+        <p className="text-dim-gray text-sm">Ordenar por fecha</p>
+        <select
+          className="bg-[#ffffff0a] border border-solid border-onyx px-3 py-2 rounded-full text-sm w-max focus:outline-none"
+          id="sortItems"
+          name="sortItems"
+          value={sortItems}
+          onChange={(e) => setSortItems(e.target?.value)}
+        >
+          <option value="recientesPrimero">de recientes a antiguos</option>
+          <option value="antiguosPrimero">de antiguos a recientes</option>
+        </select>
         <p className="text-dim-gray text-sm">Filtrar por estado</p>
         <select
           className="bg-[#ffffff0a] border border-solid border-onyx px-3 py-2 rounded-full text-sm w-max focus:outline-none"
@@ -127,11 +139,19 @@ export const DocumentsPage = () => {
           />
         ) : (
           <DocumentsTable
-            documents={filteredDocuments.sort(
-              (a, b) =>
-                new Date(b.creationTimeAndDate) -
-                new Date(a.creationTimeAndDate)
-            )}
+            documents={
+              sortItems === 'recientesPrimero'
+                ? filteredDocuments.sort(
+                    (a, b) =>
+                      new Date(b.creationTimeAndDate) -
+                      new Date(a.creationTimeAndDate)
+                  )
+                : filteredDocuments.sort(
+                    (a, b) =>
+                      new Date(a.creationTimeAndDate) -
+                      new Date(b.creationTimeAndDate)
+                  )
+            }
           />
         )}
       </section>
