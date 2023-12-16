@@ -3,7 +3,8 @@ import { create } from 'zustand'
 export const MODAL_IDS = {
   changePassword: 'changePassword',
   createDocument: 'createDocument',
-  manageDocumentTypes: 'manageDocumentTypes'
+  manageDocumentTypes: 'manageDocumentTypes',
+  addComment: 'addComment'
 }
 
 export const DOCUMENT_STATES = {
@@ -16,6 +17,7 @@ export const dataStore = create((set) => ({
   users: [],
   documentTypes: [],
   documents: [],
+  documentComments: [],
   modalToShow: null,
   setUsers: (users) => set((state) => ({ ...state, users })),
   setModalToShow: (modalToShow) => set((state) => ({ ...state, modalToShow })),
@@ -26,7 +28,19 @@ export const dataStore = create((set) => ({
       ...state,
       documentTypes: [...state.documentTypes, documentType]
     })),
-  removeDocumentType: (documentId) => set(state => ({ ...state, documentTypes: state?.documentTypes?.filter(dt => dt.id !== documentId) })),
-  setDocuments: (documents) => set(state => ({ ...state, documents })),
-  addDocument: (document) => set(state => ({ ...state, documents: [ ...state.documents, document ] }))
+  removeDocumentType: (documentId) =>
+    set((state) => ({
+      ...state,
+      documentTypes: state?.documentTypes?.filter((dt) => dt.id !== documentId)
+    })),
+  setDocuments: (documents) => set((state) => ({ ...state, documents })),
+  addDocument: (document) =>
+    set((state) => ({ ...state, documents: [...state.documents, document] })),
+  setDocumentComments: (documentComments) =>
+    set((state) => ({ ...state, documentComments })),
+  addDocumentComment: (documentComment) =>
+    set((state) => ({
+      ...state,
+      documentComments: [...state.documentComments, documentComment]
+    }))
 }))
