@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { authStore, dataStore } from '../stores'
-import { PageLayout } from './PageLayout'
 import {
   ActionButton,
   DocumentsTable,
@@ -26,7 +25,7 @@ export const HomePage = () => {
     if (result !== null && result?.length > 0) setDocumentsSentToYou(result)
   }, [documents, user?.uid])
   return (
-    <PageLayout>
+    <>
       <section className="flex items-center justify-end gap-3">
         <ActionButton
           text="Refrescar"
@@ -62,9 +61,15 @@ export const HomePage = () => {
             text="Espera a recibir documentos para verlos aqui"
           />
         ) : (
-          <DocumentsTable documents={documentsSentToYou} />
+          <DocumentsTable
+            documents={documentsSentToYou.sort(
+              (a, b) =>
+                new Date(b.creationTimeAndDate) -
+                new Date(a.creationTimeAndDate)
+            )}
+          />
         )}
       </section>
-    </PageLayout>
+    </>
   )
 }
