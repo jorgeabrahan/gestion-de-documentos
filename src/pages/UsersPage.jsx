@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { authStore, dataStore } from '../stores'
-import { PageLayout } from './PageLayout'
 import { SearchInput, UserRow } from './users-page-c'
 import { useForm } from '../hooks'
 import toast from 'react-hot-toast'
@@ -47,7 +46,7 @@ export const Users = () => {
     setFilteredUsers(filtered)
   }
   return (
-    <PageLayout needsToBeAdmin={true}>
+    <>
       <form
         className="flex items-center justify-end mb-3 gap-3"
         onSubmit={handleSubmit}
@@ -74,13 +73,17 @@ export const Users = () => {
           handleClick={() => {
             setIsRefreshing(true)
             toast(() => <span>Recargando documentos...</span>)
-            getAllUsers().then((res) => {
-              if (res?.error !== null) {
-                toast.error('No se pudieron cargar los usuarios')
-                return
-              }
-              setUsers(res?.users)
-            })
+            getAllUsers()
+              .then((res) => {
+                if (res?.error !== null) {
+                  toast.error('No se pudieron cargar los usuarios')
+                  return
+                }
+                setUsers(res?.users)
+              })
+              .finally(() => {
+                setIsRefreshing(false)
+              })
           }}
           isDisabled={isRefreshing}
         >
@@ -110,6 +113,6 @@ export const Users = () => {
           ))}
         </div>
       </section>
-    </PageLayout>
+    </>
   )
 }
