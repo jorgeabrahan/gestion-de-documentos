@@ -18,6 +18,9 @@ export default {
           DEFAULT: '#1d1d1f',
           800: '#1f1f1f'
         },
+        yellow: {
+          DEFAULT: '#F59700'
+        },
         'dim-gray': {
           DEFAULT: '#6E6E73'
         },
