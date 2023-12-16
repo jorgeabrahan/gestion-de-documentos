@@ -56,7 +56,6 @@ export const DocumentPage = () => {
     getComments(documentId).then((res) => {
       if (res?.error !== null) {
         toast.error('No se pudieron obtener los comentarios')
-        console.log(res?.error)
         return
       }
       if (res?.comments?.length > 0) setDocumentComments(res?.comments)
@@ -123,7 +122,7 @@ export const DocumentPage = () => {
             className="mb-2"
             text="Estado del documento: "
           />
-          <div className="flex gap-3">
+          <form className="flex gap-3">
             <select
               className="bg-[#ffffff0a] border border-solid border-onyx px-3 py-2 rounded-md text-sm w-max focus:outline-none"
               id="documentStatus"
@@ -145,7 +144,7 @@ export const DocumentPage = () => {
             >
               <Save />
             </button>
-          </div>
+          </form>
           {currentDocument?.files?.length > 0 && (
             <>
               <SecondaryDescription
@@ -185,7 +184,6 @@ export const DocumentPage = () => {
               .then((res) => {
                 if (res?.error !== null) {
                   toast.error('No se pudieron cargar los comentarios')
-                  console.log(res?.error)
                   return
                 }
                 setDocumentComments(res?.comments)
