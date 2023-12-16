@@ -1,12 +1,18 @@
 import PropTypes from 'prop-types'
 
-export const Tag = ({ text = '', isBlue = false }) => {
+export const Tag = ({ text = '', className = '' }) => {
   return (
-    <span className={`${isBlue ? 'bg-celtic-blue' : 'bg-fire-engine-red-500'} rounded-full font-semibold px-3 py-1 text-xs w-max h-max`}>{text}</span>
-  );
+    <span
+      className={`${
+        className?.trim()?.length === 0 ? 'bg-fire-engine-red-500' : className
+      } rounded-full font-semibold px-3 py-1 text-xs w-max h-max`}
+    >
+      {text}
+    </span>
+  )
 }
 
 Tag.propTypes = {
-    text: PropTypes.string,
-    isBlue: PropTypes.bool
+  text: PropTypes.string,
+  className: PropTypes.string
 }
